@@ -1,1 +1,13 @@
-
+-- TABLE
+CREATE TABLE replies (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    message TEXT NOT NULL,
+    reply TEXT NOT NULL
+);
+ 
+-- INDEX
+ 
+-- TRIGGER
+ 
+-- VIEW
+ 
