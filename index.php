@@ -1,6 +1,12 @@
 <?php
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
+require_once __DIR__ . '/vendor/autoload.php';
+
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->load();
+
+$BOT_TOKEN = $_ENV['BOT_TOKEN'];
+$ADMIN_ID = $_ENV['ADMIN_ID'];
+$VIDEO_URL = $_ENV['VIDEO_URL'];
 
 require 'replyManager.php';
 
@@ -15,7 +21,7 @@ $chat_id = $message['chat']['id'];
 $text = strtolower($message['text'] ?? '');
 
 if (strpos($text, 'status') !== false || strpos($text, 'video') !== false) {
-    sendVideo($chat_id);
+    sendVideo($chat_id, $VIDEO_URL);
 } else {
     $reply = getReply($chat_id, $text);
     if (!$reply) {
@@ -26,19 +32,20 @@ if (strpos($text, 'status') !== false || strpos($text, 'video') !== false) {
 }
 
 function sendMessage($chat_id, $text) {
-    $url = "https://api.telegram.org/bot" . getenv('BOT_TOKEN') . "/sendMessage";
+    global $BOT_TOKEN;
+    $url = "https://api.telegram.org/bot$BOT_TOKEN/sendMessage";
     $post = ['chat_id' => $chat_id, 'text' => $text];
     file_get_contents($url . '?' . http_build_query($post));
 }
 
-function sendVideo($chat_id) {
-    $file_id = 'BAACAgUAAxkBAAIBIWY6UXhCZGZ3-xyzABC123'; // Replace with your actual file_id
-    $url = "https://api.telegram.org/bot" . getenv('BOT_TOKEN') . "/sendVideo";
-    $post = [
-        'chat_id' => $chat_id,
-        'video' => $file_id,
-        'caption' => '❤️ Avni ka status for you...'
-    ];
+function sendVideo($chat_id, $video_url) {
+    global $BOT_TOKEN;
+    $url = "https://api.telegram.org/bot$BOT_TOKEN/sendVideo";
+    $post = ['chat_id' => $chat_id, 'video' => $video_url, 'caption' => '❤️ Avni ka status for you...'];
     file_get_contents($url . '?' . http_build_query($post));
 }
+
+// ✅ Very Important
+http_response_code(200);
+echo "OK";
 ?>
