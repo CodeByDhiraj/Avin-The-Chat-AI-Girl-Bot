@@ -15,7 +15,7 @@ $chat_id = $message['chat']['id'];
 $text = strtolower($message['text'] ?? '');
 
 if (strpos($text, 'status') !== false || strpos($text, 'video') !== false) {
-    sendVideo($chat_id, 'https://knullmods.site/avni/media/status1.mp4');
+    sendVideo($chat_id);
 } else {
     $reply = getReply($chat_id, $text);
     if (!$reply) {
@@ -26,14 +26,19 @@ if (strpos($text, 'status') !== false || strpos($text, 'video') !== false) {
 }
 
 function sendMessage($chat_id, $text) {
-    $url = "https://api.telegram.org/bot8041300518:AAF6yNOONzEomA7cpjp5_iM5e_XOWo-qrnw/sendMessage";
+    $url = "https://api.telegram.org/bot" . getenv('BOT_TOKEN') . "/sendMessage";
     $post = ['chat_id' => $chat_id, 'text' => $text];
     file_get_contents($url . '?' . http_build_query($post));
 }
 
-function sendVideo($chat_id, $video_url) {
-    $url = "https://api.telegram.org/bot8041300518:AAF6yNOONzEomA7cpjp5_iM5e_XOWo-qrnw/sendVideo";
-    $post = ['chat_id' => $chat_id, 'video' => $video_url, 'caption' => '❤️ Avni ka status for you...'];
+function sendVideo($chat_id) {
+    $file_id = 'BAACAgUAAxkBAAIBIWY6UXhCZGZ3-xyzABC123'; // Replace with your actual file_id
+    $url = "https://api.telegram.org/bot" . getenv('BOT_TOKEN') . "/sendVideo";
+    $post = [
+        'chat_id' => $chat_id,
+        'video' => $file_id,
+        'caption' => '❤️ Avni ka status for you...'
+    ];
     file_get_contents($url . '?' . http_build_query($post));
 }
 ?>
